@@ -34,9 +34,9 @@ img.visible {
     display: block;
 }
 
-#next-button {
+#next-button, #prev-button {
     position: fixed;
-    top: 50%;
+    top: 45%;
     right: 20px;
     background-image: linear-gradient(to top, #5f72bd 0%, #9b23ea 100%);
     border-radius: 50%;
@@ -46,7 +46,13 @@ img.visible {
     transition: opacity .3s ease;
 }
 
-#next-button:hover {
+#prev-button {
+    right: auto;
+    left: 20px;
+    transform: rotateZ(180deg);
+}
+
+#next-button:hover, #prev-button:hover {
     opacity: 3;
 }
 

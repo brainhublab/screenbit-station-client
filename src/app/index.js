@@ -14,6 +14,7 @@ const run = () => {
 
     const sourceInfo = document.getElementById('source-info');
     const nextButton = document.getElementById('next-button');
+    const prevButton = document.getElementById('prev-button');
     const video = document.getElementById("video-element");
     const image = document.getElementById("img-element");
     // at the end of the video
@@ -21,6 +22,16 @@ const run = () => {
     // btn next
     nextButton.addEventListener('click', () => {
         clearPrevTimeout();
+        rotate();
+    });
+    prevButton.addEventListener('click', () => {
+        clearPrevTimeout();
+        const currentIdx = index - 1;
+        if (currentIdx > keys.length || currentIdx < 1) {
+            index = keys.length - 1;
+        } else {
+            index = currentIdx - 1;
+        }
         rotate();
     });
 
@@ -55,7 +66,7 @@ const run = () => {
     }
 
     function rotate() {
-        if (index === Object.keys(currentHourData).length) {
+        if (index >= keys.length) {
             // end of the current hour data, reload
             reset();
         }
