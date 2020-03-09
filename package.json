@@ -1,0 +1,17 @@
+{
+  "name": "screenbitelectron",
+  "version": "1.0.0",
+  "description": "rpi electron app",
+  "main": "main.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "electron": "^7.1.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "electron .",
+    "test": "electron ."
+  },
+  "author": "peio_jr",
+  "license": "MIT"
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  </head>
+  <body>
+    <h1>Hello World!</h1>
+    <!-- <video id="video" width="320" height="240"></video> -->
+  </body>
+  <script>
+    require('dotenv').config()
+    var station_url = process.env.MEDIA_URL;
+    var mac_addr = process.env.MAC_ADDR;
+    function httpGetHourProgram(theUrl)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", station_url + mac_addr + "&hour=" + new Date().getHours(), false ); // false for synchronous request
+        xmlHttp.send( null );
+        var response = xmlHttp;
+        if (response.status != '200' && response.status != '304') {
+            return JSON.parse(null);
+        }
+        return JSON.parse(response.responseText);
+    }
+
+
+    window.onload = function() {
+        var index = 0;
+        function get_program_or_default() {
+          var currentHourData = {"0": {"url": "default4.jpg",
+                                       "type": "IM"}}
+          var keys = {}
+          try {
+              var program = httpGetHourProgram(station_url);
+              if (program != null) {
+                  var busyHour = program[new Date().getHours()];
+              if (typeof busyHour != "undefined"){
+                  currentHourData = busyHour;
+                  // console.log(Object.keys(currentHourData));
+                  }
+              return currentHourData
+              }
+          } catch (e) {
+              console.log(e);
+              return currentHourData
+            }
+        }
+
+        var currentHourData = get_program_or_default()
+        var keys = Object.keys(currentHourData)
+        function rotate_at_video_end(){
+            if(this.currentTime === this.duration){
+              setTimeout(rotate, 2000);
+        	   };
+        }
+
+      function rotate() {
+        document.body.innerHTML = "";
+        document.body.style.backgroundColor = "black";
+
+        if (index === Object.keys(currentHourData).length) {
+            index = 0;
+            currentHourData = get_program_or_default()
+            keys = Object.keys(currentHourData)
+        }
+
+        if ( currentHourData[keys[String(index)]]["type"] === "VD" ) {
+            var video = document.createElement("video");
+            document.body.appendChild(video)
+            video.setAttribute("src", currentHourData[keys[String(index)]]["url"]);
+            video.setAttribute("width", "100% - 100px");
+            video.setAttribute("height", "100%");
+            video.addEventListener("timeupdate", rotate_at_video_end, false);
+            video.load();
+            video.muted = true;
+            video.play();
+
+        } else if ( currentHourData[keys[String(index)]]["type"] === "IM" ) {
+            var image = document.createElement("img");
+            document.body.appendChild(image);
+            image.setAttribute("src", currentHourData[keys[String(index)]]["url"]);
+            image.setAttribute("width", "auto");
+            image.setAttribute("height", "auto");
+
+            if (typeof currentHourData[keys[String(index)]]["duration"] == "undefined"){
+              currentHourData[keys[String(index)]]["duration"] = 2;
+            }
+
+            setTimeout(rotate, currentHourData[keys[String(index)]]["duration"] * 1000);
+          }
+        index += 1;
+      };
+      setTimeout(rotate, 2000)
+    };
+
+
+  </script>
+</html>
