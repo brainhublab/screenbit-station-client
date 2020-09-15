@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Screenbit station client</h1>
-  <p>Screenbit is a next-generation advertising & monitoring system</p>
+  <p>Screenbit is a digital signage software that allows you create and control your engaging content on displays near your target area</p>
 </div>
 
 ## ✨ Features / Tech stack
